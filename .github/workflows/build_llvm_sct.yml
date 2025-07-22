@@ -91,8 +91,8 @@ jobs:
 
           rm -rf "$ROOTDIR/../llvm_android"
 
-          if [ -d "$ROOTDIR/patches/musl/llvm/$LLVM_VERSION" ]; then
-            for PATCH in $ROOTDIR/patches/musl/llvm/$LLVM_VERSION/*.patch; do
+          if [ -d "$ROOTDIR/patches/sct/llvm/$LLVM_VERSION" ]; then
+            for PATCH in $ROOTDIR/patches/sct/llvm/$LLVM_VERSION/*.patch; do
               echo "Applying $(basename "$PATCH")..."
               git apply "$PATCH"
             done
@@ -109,7 +109,7 @@ jobs:
         id: zig_version
         run: |
           case "${{ matrix.target }}" in
-            arm-linux-musleabihf|armeb-linux-musleabihf|s390x-linux-musl)
+            arm-linux-sctoabihf|armeb-linux-sctoabihf|s390x-linux-sct)
               echo "version=0.15.0-dev.137+db7db4802" >> $GITHUB_OUTPUT
               ;;
             *)
@@ -126,7 +126,7 @@ jobs:
       - name: Setup Zig toolchain
         run: | 
           git clone https://github.com/${{ github.repository_owner }}/zig-as-llvm
-          cp -R $ROOTDIR/patches/musl/zig/* $(whereis zig | awk '{print $2}' | xargs dirname)
+          cp -R $ROOTDIR/patches/sct/zig/* $(whereis zig | awk '{print $2}' | xargs dirname)
 
       - name: Install dependencies
         run: sudo apt install -y ninja-build
